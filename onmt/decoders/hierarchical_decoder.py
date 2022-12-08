@@ -8,6 +8,7 @@ from ..utils.rnn_factory import rnn_factory
 from ..utils.misc import aeq, nwise, sequence_mask
 from torch.nn.utils.rnn import pad_sequence
 import onmt
+from onmt.utils.logging import logger
 
 
 class ContainsNaN(Exception):
@@ -223,7 +224,7 @@ class HierarchicalRNNDecoder(RNNDecoderBase):
             #     - rnn_output [seq_len, bsz, n-directions * hidden_size]
             #     - dec_state [n-layers * n-directions, bsz, hidden_size] * 2
             # We unpack the rnn_output on dim 2 and keep the last layer
-            
+            # logger.info(f"rnn out from decoder : {rnn_output.shape}")
             if self.attentional:
                 decoder_output, ret = self.attn(
                     rnn_output,

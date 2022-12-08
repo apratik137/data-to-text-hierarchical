@@ -8,7 +8,7 @@ from onmt.encoders.encoder import EncoderBase
 from onmt.modules import MultiHeadedAttention
 from onmt.modules.position_ffn import PositionwiseFeedForward
 from onmt.utils.misc import sequence_mask
-
+from onmt.utils.logging import logger
 
 class TransformerEncoderLayer(nn.Module):
     """

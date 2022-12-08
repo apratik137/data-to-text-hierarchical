@@ -107,7 +107,9 @@ def build_decoder(opt, embeddings, dims=None):
     dec_type = "ifrnn" if opt.decoder_type == "rnn" and opt.input_feed \
                else opt.decoder_type
     if dims is not None:
+        logger.info("WTFFFFF")
         return str2dec[dec_type].from_opt(opt, embeddings, dims)
+    logger.info("FUCKKKKKKKKKKKKKKKKK")
     return str2dec[dec_type].from_opt(opt, embeddings)
 
 

@@ -3,6 +3,7 @@ from onmt.encoders.encoder import EncoderBase
 from onmt.utils.misc import nwise, aeq, sequence_mask
 import torch, copy
 import onmt
+from onmt.utils.logging import logger
 
 
 class ContainsNaN(Exception):
@@ -224,16 +225,20 @@ class HierarchicalTransformerEncoder(EncoderBase):
         chunk_mask = build_chunk_mask(lengths, self.ent_size).to(src.device)
         
         # embs [seq_len, bs, hidden_size]
+
         embs, pos_embs = self.embeddings(src)
+        # logger.info(f'embeddings inputs: {src.shape}, embs: {embs.shape}, pos_embs: {pos_embs.shape}')
         _check_for_nan(embs, 'after embedding layer')
         _check_for_nan(pos_embs, 'after embedding layer')
         
         # units [seq_len, bs, hidden_size]
         units = self.unit_encoder(embs, mask=self_attn_mask)
+        # logger.info(f'unit_encoder inputs: embs: {embs.shape}, output units: {units.shape}')
 
         # chunks & units_tokens [n_units, bs, hidden_size]
         units_tokens = units[range(0, seq_len, self.ent_size), :, :]
         chunks = self.chunk_encoder(units_tokens, mask=chunk_mask)
+        # logger.info(f"chunk encoder inputs: units_tokens: {units_tokens.shape}, outputs chunks: {chunks.shape}")
         
         # memory bank every thing we want to pass to the decoder
         # all tensors should have dim(1) be the batch size
@@ -248,8 +253,9 @@ class HierarchicalTransformerEncoder(EncoderBase):
         # We average the units representation to give a final encoding
         # and be inline with the onmt framework
         encoder_final = chunks.mean(dim=0).unsqueeze(0)
+        # logger.info(f"encoder_final: {encoder_final.shape}")
 #        encoder_final = (encoder_final, encoder_final)
-        
+        # logger.info(f"lengths: {lengths}")
         return encoder_final, memory_bank, lengths
     
     def update_dropout(self, dropout):

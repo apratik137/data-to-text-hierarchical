@@ -2,6 +2,7 @@
 import math
 import torch
 import torch.nn as nn
+from onmt.utils.logging import logger
 
 from onmt.utils.misc import generate_relative_positions_matrix,\
                             relative_matmul
@@ -111,16 +112,17 @@ class MultiHeadedAttention(nn.Module):
         #    aeq(k_len_, k_len)
         #    aeq(q_len_ == q_len)
         # END CHECKS
-
+        # logger.info(f"checks type {type(key)}")
         batch_size = key.size(0)
-        dim_per_head = self.dim_per_head
-        head_count = self.head_count
+        dim_per_head = abs(self.dim_per_head)
+        head_count = abs(self.head_count)
         key_len = key.size(1)
         query_len = query.size(1)
 
         def shape(x):
             """Projection."""
-            return x.view(batch_size, -1, head_count, dim_per_head) \
+            # logger.info(f"the stats: {batch_size}, {head_count}, {dim_per_head}")
+            return x.view(batch_size, -1, abs(head_count), abs(dim_per_head)) \
                 .transpose(1, 2)
 
         def unshape(x):

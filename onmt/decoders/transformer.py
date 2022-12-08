@@ -9,6 +9,7 @@ from onmt.decoders.decoder import DecoderBase
 from onmt.modules import MultiHeadedAttention, AverageAttention
 from onmt.modules.position_ffn import PositionwiseFeedForward
 from onmt.utils.misc import sequence_mask
+from onmt.utils.logging import logger
 
 
 class TransformerDecoderLayer(nn.Module):
@@ -132,7 +133,8 @@ class TransformerDecoderLayer(nn.Module):
         query = self.drop(query) + inputs
 
         query_norm = self.layer_norm_2(query)
-        mid, attns = self.context_attn(memory_bank, memory_bank, query_norm,
+        # logger.info(f"reached till here: {query_norm.shape}")
+        mid, attns = self.context_attn(memory_bank[1], memory_bank[1], query_norm,
                                        mask=src_pad_mask,
                                        layer_cache=layer_cache,
                                        attn_type="context")
@@ -205,9 +207,13 @@ class TransformerDecoder(DecoderBase):
         self.layer_norm = nn.LayerNorm(d_model, eps=1e-6)
 
         self.alignment_layer = alignment_layer
+        # self.attn = HierarchicalAttention(
+        #         (self.hidden_size, self.units_size), 
+        #         coverage=coverage_attn, use_pos=True,
+        #         attn_type=attn_type, attn_func=attn_func)
 
     @classmethod
-    def from_opt(cls, opt, embeddings):
+    def from_opt(cls, opt, embeddings, dims = None):
         """Alternate constructor."""
         return cls(
             opt.dec_layers,
@@ -251,6 +257,7 @@ class TransformerDecoder(DecoderBase):
         """Decode, possibly stepwise."""
         if step == 0:
             self._init_cache(memory_bank)
+        # logger.info(f"look heree tooo {type(tgt)}, {tgt.shape},{type(memory_bank)}, {[i.shape for i in memory_bank]}")
 
         tgt_words = tgt[:, :, 0].transpose(0, 1)
 
@@ -258,7 +265,9 @@ class TransformerDecoder(DecoderBase):
         assert emb.dim() == 3  # len x batch x embedding_dim
 
         output = emb.transpose(0, 1).contiguous()
-        src_memory_bank = memory_bank.transpose(0, 1).contiguous()
+        # logger.info(f"output shape,,,,,{output.shape}")
+        # logger.info(f"look here!!!!!! {len(memory_bank)}")
+        src_memory_bank = tuple([i.transpose(0, 1).contiguous() for i in memory_bank])
 
         pad_idx = self.embeddings.word_padding_idx
         src_lens = kwargs["memory_lengths"]
@@ -299,8 +308,8 @@ class TransformerDecoder(DecoderBase):
 
     def _init_cache(self, memory_bank):
         self.state["cache"] = {}
-        batch_size = memory_bank.size(1)
-        depth = memory_bank.size(-1)
+        batch_size = memory_bank[1].size(1)
+        depth = memory_bank[1].size(-1)
 
         for i, layer in enumerate(self.transformer_layers):
             layer_cache = {"memory_keys": None, "memory_values": None}
