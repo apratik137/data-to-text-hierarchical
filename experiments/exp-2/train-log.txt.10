@@ -1,0 +1,11 @@
+[2022-12-07 20:19:11,844 INFO] Loading dataset from experiments/exp-2/data/data.train.0.pt
+[2022-12-07 20:19:13,233 INFO] number of examples: 3398
+[2022-12-07 20:22:27,975 INFO] Step 38500/40000; acc:  89.88; ppl:  1.38; xent: 0.32; lr: 0.00006; 10025/5045 tok/s;  36392 sec
+[2022-12-07 20:22:27,980 INFO] Loading dataset from experiments/exp-2/data/data.valid.0.pt
+[2022-12-07 20:22:28,521 INFO] number of examples: 727
+[2022-12-07 20:22:57,981 INFO] Validation perplexity: 84.0212
+[2022-12-07 20:22:57,981 INFO] Validation accuracy: 49.6454
+[2022-12-07 20:22:58,013 INFO] Saving checkpoint experiments/exp-2/models/model_step_38500.pt
+[2022-12-07 20:23:26,062 INFO] Loading dataset from experiments/exp-2/data/data.train.0.pt
+[2022-12-07 20:23:27,434 INFO] number of examples: 3398
+[2022-12-07 20:26:28,678 INFO] Step 38550/40000; acc:  89.77; ppl:  1.38; xent: 0.32; lr: 0.00006; 8736/4447 tok/s;  36633 sec

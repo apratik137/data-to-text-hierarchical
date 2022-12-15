@@ -1,0 +1,11 @@
+[2022-12-07 17:17:46,617 INFO] Translating shard 0.
+[2022-12-07 22:23:32,766 INFO] Translating shard 0.
+[2022-12-07 22:35:48,827 INFO] Translating shard 0.
+[2022-12-08 06:14:55,543 INFO] Translating shard 0.
+[2022-12-08 06:17:22,307 INFO] Translating shard 0.
+[2022-12-08 06:17:49,934 INFO] Translating shard 0.
+[2022-12-08 06:18:53,499 INFO] Translating shard 0.
+[2022-12-08 06:19:11,893 INFO] Translating shard 0.
+[2022-12-08 06:20:06,329 INFO] Translating shard 0.
+[2022-12-08 06:23:44,800 INFO] Translating shard 0.
+[2022-12-08 06:38:29,036 INFO] Translating shard 0.
