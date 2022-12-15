@@ -1,0 +1,2 @@
+[2022-12-08 09:06:18,903 INFO] Translating shard 0.
+[2022-12-08 09:13:12,094 INFO] Translating shard 0.
